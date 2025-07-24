@@ -1,16 +1,9 @@
 {
-  "version": 2,
-  "public": true,
-  "name": "agendrix-site",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api"
-    }
+  "builds": [
+    { "src": "api/index.js", "use": "@vercel/node" },
+    { "src": "dist/browser/**", "use": "@vercel/static" }
   ],
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "dist/agendrix-site/**"
-    }
-  }
+  "routes": [
+    { "src": "/(.*)", "dest": "api/index.js" }
+  ]
 }
