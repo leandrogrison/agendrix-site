@@ -1,18 +1,33 @@
-// vercel-build.js
 const fs = require('fs-extra');
 const path = require('path');
-const serverDistPath = './dist/agendrix-site/server';
-const browserDistPath = './dist/agendrix-site/browser';
 
-// copia a build SSR para a pasta /api (função serverless)
-fs.copySync(serverDistPath, './api');
+const serverDist = path.join(__dirname, 'dist/agendrix-site/server');
+const browserDist = path.join(__dirname, 'dist/agendrix-site/browser');
 
+// Copia o dist do server para api
+fs.ensureDirSync('./api');
+fs.copySync(serverDist, './api');
+
+// Cria o index.js que Vercel espera
 fs.writeFileSync(
-  path.resolve('./api/index.js'),
+  './api/index.js',
   `
-  const { app } = require('./main');
-  module.exports = (req, res) => {
-    app(req, res);
-  };
-`
+    const { app } = require('./main');
+    module.exports = (req, res) => {
+      app(req, res);
+    };
+  `
 );
+
+// Copia os arquivos estáticos para o .vercel/output
+fs.ensureDirSync('.vercel/output/static');
+fs.copySync(browserDist, '.vercel/output/static');
+
+// Cria o config do Vercel
+fs.writeJSONSync('.vercel/output/config.json', {
+  version: 3,
+  routes: [
+    { src: '/api/.*', dest: '/api/index.js' },
+    { src: '/(.*)', dest: '/index.html' }
+  ]
+});
