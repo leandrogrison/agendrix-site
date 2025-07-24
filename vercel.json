@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm run build:ssr && npm run vercel-build",
+  "outputDirectory": ".vercel/output",
   "builds": [
     { "src": "api/index.js", "use": "@vercel/node" },
     { "src": "dist/browser/**", "use": "@vercel/static" }
