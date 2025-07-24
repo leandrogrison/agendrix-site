@@ -9,7 +9,7 @@
     "test": "ng test",
     "serve:ssr:agendrix-site": "node dist/agendrix-site/server/server.mjs",
     "build:ssr": "ng build && npm run serve:ssr:agendrix-site",
-    "vercel-build": "npm run serve:ssr:agendrix-site && node vercel-build.js"
+    "vercel-build": "npm run build && npm run serve:ssr:agendrix-site && node vercel-build.js"
   },
   "prettier": {
     "overrides": [
