@@ -18,6 +18,7 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist/agendrix-site",
+            "index": "src/indexFile.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
