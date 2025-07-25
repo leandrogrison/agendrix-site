@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:agendrix-site": "node dist/agendrix-site/server/server.mjs",
-    "vercel:build": "node dist/agendrix-site/server/server.mjs && ng build"
+    "vercel:build": "ng build && node dist/agendrix-site/server/server.mjs"
   },
   "prettier": {
     "overrides": [
