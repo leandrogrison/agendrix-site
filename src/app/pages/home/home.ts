@@ -1,16 +1,20 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { Error } from '../error/error';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [
+    Error
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
 export class Home implements OnInit {
 
   company: WritableSignal<any> = signal({});
+  error: boolean = false;
 
   constructor(
     private readonly title: Title,
@@ -24,7 +28,11 @@ export class Home implements OnInit {
     this.route.data.subscribe((result) => {
       console.log('Resolver result:', result);
       this.company.set(result['company']?.data[0] ?? {});
-      this.setInitial();
+      if (Object.keys(this.company()).length === 0) {
+        this.error = true;
+      } else {
+        this.setInitial();
+      }
 
     });
 

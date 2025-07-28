@@ -15,10 +15,8 @@ export class CompanyResolver implements Resolve<any> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any>|Promise<any> {
-    console.log('CompanyResolver activated for route:', route);
     const window = this.document.defaultView as Window;
     const hostname = window.location.hostname;
-    console.log('Window:', window.location.hostname);
 
     if (hostname === 'localhost') {
       return this.company.getCompanyByDomain('demo');

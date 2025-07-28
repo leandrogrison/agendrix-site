@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { App } from './app';
 import { CompanyResolver } from './resolvers/company';
 import { Home } from './pages/home/home';
+import { Error } from './pages/error/error';
 
 export const routes: Routes = [
   {
@@ -14,5 +15,9 @@ export const routes: Routes = [
         component: Home
       }
     ]
+  },
+  {
+    path: '**',
+    component: Error
   }
 ];

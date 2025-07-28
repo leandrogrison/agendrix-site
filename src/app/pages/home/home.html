@@ -1,13 +1,19 @@
-<header>
-  <div class="container">
-    <h1>{{ company().name }}</h1>
-    <menu>
-      <ul>
-        <li><a href="/">Início</a></li>
-        <li><a href="/services">Serviços</a></li>
-        <li><a href="/about">Sobre Nós</a></li>
-        <li><a href="/contact">Contato</a></li>
-      </ul>
-    </menu>
-  </div>
-</header>
+@if (error) {
+  <app-error></app-error>
+} @else {
+
+  <header>
+    <div class="container">
+      <h1>{{ company().name }}</h1>
+      <menu>
+        <ul>
+          <li><a href="/">Início</a></li>
+          <li><a href="/services">Serviços</a></li>
+          <li><a href="/about">Sobre Nós</a></li>
+          <li><a href="/contact">Contato</a></li>
+        </ul>
+      </menu>
+    </div>
+  </header>
+
+}
