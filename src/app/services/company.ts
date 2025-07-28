@@ -16,4 +16,17 @@ export class Company {
       .eq('id', id);
   }
 
+  getCompanyByDomain(domain: string): Promise<any> {
+    return this.supabase.sb
+      .from('companies')
+      .select('*')
+      .eq('domain', domain);
+  }
+
+  getCompanyBySubdomain(subdomain: string): Promise<any> {
+    return this.supabase.sb
+      .from('companies')
+      .select('*')
+      .eq('subdomain', subdomain);
+  }
 }

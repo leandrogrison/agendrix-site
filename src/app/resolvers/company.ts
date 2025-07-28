@@ -12,6 +12,12 @@ export class CompanyResolver implements Resolve<any> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any>|Promise<any> {
-    return this.company.getCompany('148f6e34-18d5-413f-bf46-7941e365d600');
+    console.log('CompanyResolver activated for route:', route);
+    console.log('Current state:', state.url);
+    let domain = '';
+    // if (location.hostname === 'localhost') {
+    //   domain = 'demo';
+    // }
+    return this.company.getCompanyByDomain(domain);
   }
 }
