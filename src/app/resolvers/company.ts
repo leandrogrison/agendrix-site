@@ -17,11 +17,20 @@ export class CompanyResolver implements Resolve<any> {
   ): Observable<any>|Promise<any> {
     console.log('CompanyResolver activated for route:', route);
     const window = this.document.defaultView as Window;
+    const hostname = window.location.hostname;
     console.log('Window:', window.location.hostname);
-    let domain = '';
-    if (window.location.hostname === 'localhost') {
-      domain = 'demo';
+
+    if (hostname === 'localhost') {
+      return this.company.getCompanyByDomain('demo');
+    } else if (hostname.indexOf('agendrix') > 0) {
+      const parts = hostname.split('.');
+      const subdomain = parts.length > 2 ? parts[0] : '';
+      return this.company.getCompanyBySubdomain(subdomain);
+    } else {
+      const parts = hostname.split('.');
+      const domain = parts.length > 2 ? parts.slice(-2).join('.') : '';
+      return this.company.getCompanyByDomain(domain);
     }
-    return this.company.getCompanyByDomain(domain);
+
   }
 }
