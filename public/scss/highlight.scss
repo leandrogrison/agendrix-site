@@ -1,0 +1,39 @@
+.highlight {
+  background-color: var(--color-highlight-background);
+  color: var(--color-highlight-text);
+  position: relative;
+  .highlight-text {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      height: 100%;
+      opacity: .86;
+      background-color: var(--color-highlight-background);
+    }
+  }
+  strong {
+    font-weight: 500;
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    padding: var(--space-4x) 0;
+    position: relative;
+    z-index: 2;
+    @media (max-width: 767px) {
+      font-size: 20px;
+      padding: var(--space-3x) 0;
+    }
+  }
+  img {
+    width: 100%;
+    height: calc(100dvh - 80px);
+    object-fit: cover;
+  }
+}

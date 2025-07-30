@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { App } from './app';
 import { CompanyResolver } from './resolvers/company';
+import { ServicesResolver } from './resolvers/services';
 import { Home } from './pages/home/home';
 import { Error } from './pages/error/error';
 
@@ -12,7 +13,8 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: Home
+        component: Home,
+        resolve: { services: ServicesResolver },
       }
     ]
   },

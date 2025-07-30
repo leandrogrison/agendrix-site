@@ -1,0 +1,148 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-plus) var(--space-4x);
+  font-size: var(--btn-default-font-size);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-btn-text);
+  background-color: var(--color-btn-background);
+  border: var(--btn-border-width) solid var(--color-btn-border);
+  border-radius: var(--btn-radius);
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: .2s;
+}
+
+.btn:hover {
+  text-decoration: none;
+  color: var(--color-btn-hover-text);
+  background-color: var(--color-btn-hover-background);
+  border-color: var(--color-btn-hover-border);
+}
+
+.btn:focus {
+  background-color: var(--color-btn-hover-background);
+  color: var(--color-btn-hover-text);
+  border-color: var(--color-btn-hover-border);
+  outline: var(--btn-border-width) solid var(--color-btn-hover-border);
+  outline-offset: var(--btn-border-width);
+}
+
+.btn:disabled {
+  cursor: default;
+  color: var(--color-btn-disabled-text);
+  background-color: var(--color-btn-disabled-background);
+  border-color: var(--color-btn-disabled-border);
+}
+
+.btn.btn-small {
+  padding: var(--space-default) var(--space-3x);
+  font-size: var(--btn-default-font-size-small);
+}
+
+.btn.btn-large {
+  padding: var(--space-2x) var(--space-4x);
+  font-size: var(--btn-default-font-size-large);
+}
+
+.btn.btn-primary {
+  color: var(--color-btn-primary-text);
+  background-color: var(--color-btn-primary-background);
+  border-color: var(--color-btn-primary-border);
+}
+
+.btn.btn-primary:hover {
+  color: var(--color-btn-primary-hover-text);
+  background-color: var(--color-btn-primary-hover-background);
+  border-color: var(--color-btn-primary-hover-border);
+}
+
+.btn.btn-primary:focus {
+  color: var(--color-btn-primary-hover-text);
+  background-color: var(--color-btn-primary-hover-background);
+  border-color: var(--color-btn-primary-hover-border);
+}
+
+.btn.btn-primary:disabled {
+  cursor: default;
+  color: var(--color-btn-disabled-text);
+  background-color: var(--color-btn-disabled-background);
+  border-color: var(--color-btn-disabled-border);
+}
+
+.btn.btn-secondary {
+  color: var(--color-btn-secondary-text);
+  background-color: var(--color-btn-secondary-background);
+  border-color: var(--color-btn-secondary-border);
+}
+
+.btn.btn-secondary:hover {
+  color: var(--color-btn-secondary-hover-text);
+  background-color: var(--color-btn-secondary-hover-background);
+  border-color: var(--color-btn-secondary-hover-border);
+}
+
+.btn.btn-secondary:focus {
+  color: var(--color-btn-secondary-hover-text);
+  background-color: var(--color-btn-secondary-hover-background);
+  border-color: var(--color-btn-secondary-hover-border);
+}
+
+.btn.btn-secondary:disabled {
+  cursor: default;
+  color: var(--color-btn-disabled-text);
+  background-color: var(--color-btn-disabled-background);
+  border-color: var(--color-btn-disabled-border);
+}
+
+.btn.btn-loading {
+  pointer-events: none;
+  color: var(--color-btn-disabled-text);
+  background-color: var(--color-btn-disabled-background);
+  border-color: var(--color-btn-disabled-border);
+}
+
+.btn.btn-loading.btn-primary {
+  color: var(--color-btn-disabled-text);
+  background-color: var(--color-btn-disabled-background);
+  border-color: var(--color-btn-disabled-border);
+}
+
+.btn.btn-loading.btn.btn-secondary {
+  color: var(--color-btn-disabled-text);
+  background-color: var(--color-btn-disabled-background);
+  border-color: var(--color-btn-disabled-border);
+}
+
+.btn.btn-loading .loading {
+  min-width: 24px;
+  min-height: 8px;
+  margin: 0 var(--space-default) 0 calc(-1 * var(--space-default));
+}
+
+.btn.btn-loading .loading:before,
+.btn.btn-loading .loading:after {
+  width: 24px;
+  height: 24px;
+  border-width: var(--space-half);
+}
+
+@media (max-width: 980px) {
+  .btn {
+    padding: var(--space-plus) var(--space-3x);
+    font-size: var(--btn-default-font-size-mobile);
+  }
+
+  .btn.btn-small {
+    padding: var(--space-default) var(--space-2x);
+    font-size: var(--btn-default-font-size-small-mobile);
+  }
+
+  .btn.btn-large {
+    padding: var(--space-plus) var(--space-3x);
+    font-size: var(--btn-default-font-size-large-mobile);
+  }
+}

@@ -1,0 +1,38 @@
+.contact {
+  padding: var(--space-8x) 0;
+  color: var(--color-contact-text);
+  background-color: var(--color-contact-background);
+  text-align: center;
+  @media screen and (max-width: 767px) {
+    padding: var(--space-4x) 0;
+  }
+  .container {
+    max-width: 800px;
+  }
+  .contact-content {
+    margin-top: var(--space-4x);
+    .form-group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+      textarea,
+      select,
+      input {
+        &.filled,
+        &:focus {
+          & + label {
+            color: var(--color-contact-text);
+          }
+        }
+      }
+      .form-error {
+        text-align: left;
+        color: var(--color-contact-text);
+      }
+    }
+    .btn:not(:focus):not(:disabled):not(:hover) {
+      color: var(--color-contact-text);
+      border-color: var(--color-contact-text);
+    }
+  }
+}

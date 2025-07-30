@@ -2,18 +2,211 @@
   <app-error></app-error>
 } @else {
 
-  <header>
-    <div class="container">
-      <h1>{{ company().name }}</h1>
-      <menu>
-        <ul>
-          <li><a href="/">Início</a></li>
-          <li><a href="/services">Serviços</a></li>
-          <li><a href="/about">Sobre Nós</a></li>
-          <li><a href="/contact">Contato</a></li>
-        </ul>
-      </menu>
-    </div>
-  </header>
+  <div [class]="'theme-' + theme() + (colorType() ? '-inverted' : '')" class="page">
+    <a id="home" class="anchor" aria-label="Início"></a>
+
+    <header class="header" [class]="showMenu ? 'menu-active' : ''">
+      <div class="container">
+        <h1>
+          <a href="/#home">
+            @if (company().logo) {
+              <img [src]="company().logo" [alt]="company().name" />
+            } @else {
+              {{ company().name }}
+            }
+          </a>
+        </h1>
+        <menu>
+          <ul (click)="closeMenu()">
+            <li><a href="/#home">Início</a></li>
+            @if (services().length > 0) {
+              <li><a href="/#services">Serviços</a></li>
+            }
+            <li><a href="/#about">Sobre nós</a></li>
+            @if (company().site_setup?.showContact) {
+              <li><a href="/#contact">Contato</a></li>
+            }
+          </ul>
+        </menu>
+        <button type="button" (click)="toggleMenu()" class="btn-mobile" aria-label="Abrir menu principal">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+      <div class="menu-overlay" (click)="toggleMenu()"></div>
+    </header>
+
+    @if (company().site_setup?.showImageHighlight && (company().site_setup?.imageHighlight || company().site_setup?.textHighlight)) {
+      <section class="highlight">
+        @if (company().site_setup.textHighlight) {
+          <div class="highlight-text">
+            <div class="container">
+              <strong>{{ company().site_setup.textHighlight }}</strong>
+            </div>
+          </div>
+        }
+        @if (company().site_setup.imageHighlight) {
+          <img [src]="company().site_setup.imageHighlight" [alt]="company().site_setup.textHighlight" />
+        }
+      </section>
+    }
+
+    @if (services().length > 0 && company().site_setup?.showServices) {
+      <div class="container">
+        <a id="services" class="anchor" aria-label="Serviços"></a>
+        <section class="services-list">
+          <div class="services-list-header">
+            <h2>Serviços</h2>
+          </div>
+          <ul>
+            @for (service of services(); track $index) {
+              <li>
+                <a [routerLink]="['/service', service.id]">
+                  <span class="services-list-content">
+                    <strong>{{ service.name }}</strong>
+                    @if (service.description) {
+                      <span class="services-list-description">{{ service.description }}</span>
+                    }
+                    @if (service.price && service.show_price_in_site && company().site_setup?.showPriceServices) {
+                      <span class="services-list-price">{{ service.price | currency: 'BRL' }}</span>
+                    }
+                  </span>
+                  <span class="services-list-more">
+                    Saiba mais
+                    <svg viewBox="0 0 8 12" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1.99984 0L0.589844 1.41L5.16984 6L0.589844 10.59L1.99984 12L7.99984 6L1.99984 0Z"/>
+                    </svg>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+    }
+
+
+    <section class="about-us">
+      <a id="about" class="anchor" aria-label="Sobre nós"></a>
+      <div class="container">
+        <h2>Sobre nós</h2>
+        <div class="about-us-content">
+          <p class="about-us-description">{{ company().description }}</p>
+          @if (company().phone!.length > 10) {
+            <p class="about-us-phone">Telefone (Whatsapp): <strong>{{ company().phone | mask: '(00) 00000-0000' }}</strong></p>
+          } @else {
+            <p class="about-us-phone">Telefone (Whatsapp): <strong>{{ company().phone | mask: '(00) 0000-0000' }}</strong></p>
+          }
+          @for (place of places(); track $index) {
+            <div class="about-us-place">
+              <p>
+                @if (place.street) {
+                  {{ place.street }},
+                }
+                @if (place.number) {
+                  {{ place.number }} -
+                }
+                @if (place.complement) {
+                  {{ place.complement }} -
+                }
+                @if (place.neighborhood) {
+                  {{ place.neighborhood }} -
+                }
+                @if (place.city) {
+                  {{ place.city }} -
+                }
+                @if (place.state) {
+                  {{ place.state }} -
+                }
+                @if (place.cep) {
+                  CEP: {{ place.cep | mask: '00000-000' }}
+                }
+              </p>
+            </div>
+          }
+
+          @if (company().site_setup?.showMap && mapUrl) {
+            <iframe
+              [src]="mapUrl"
+              title="Mapa de localização"
+              allowfullscreen
+              loading="lazy"
+              class="about-us-map"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          }
+
+          @if (openingHours()) {
+            <h4>Horário de funcionamento</h4>
+            <table class="about-us-opening-hours">
+              <thead>
+                <tr>
+                  <th>Dia</th>
+                  <th>Horário</th>
+                </tr>
+              <tbody>
+                @for (day of days; track day) {
+                  <tr>
+                    <td>{{ openingHours()[day].name }}</td>
+                    <td>
+                      @if (openingHours()[day].active) {
+                        @for (item of openingHours()[day].intervals; track $index) {
+                          <span>{{ item.start }} - {{ item.end }}</span>
+                        }
+                      } @else {
+                        <span>Fechado</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </section>
+
+    @if (company().site_setup?.showContact) {
+      <section class="contact">
+        <a id="contact" class="anchor" aria-label="Contato"></a>
+        <div class="container">
+          <h2>Contato</h2>
+          <p>Fale com a gente e agende um de nossos serviços agora mesmo.</p>
+          <div class="contact-content">
+            <form class="form">
+              <div class="form-group">
+                <input type="text" id="name" name="name" required />
+                <label for="name">Seu nome</label>
+                <small class="form-error">Informe seu nome completo</small>
+              </div>
+              <div class="form-group">
+                <input type="tel" id="phone" name="phone" required />
+                <label for="phone">Seu telefone</label>
+                <small class="form-error">Informe seu telefone completo</small>
+              </div>
+              <div class="form-group">
+                <textarea id="message" name="message" rows="4" required></textarea>
+                <label for="message">Mensagem</label>
+                <small class="form-error">Digite uma mensagem</small>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-large">Enviar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    }
+
+    <footer class="footer">
+      <div class="container">
+        <p><small>
+          © Copyright {{ currentYear }} - Desenvolvido por <a href="https://www.agendrix.com.br" target="_blank" class="link">Agendrix</a>.
+        </small></p>
+      </div>
+    </footer>
+
+  </div>
 
 }

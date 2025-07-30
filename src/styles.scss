@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@use '../public/scss/variables.scss';
+@use '../public/fonts/Montserrat/stylesheet.scss';
+@use '../public/scss/base.scss';
+@use '../public/scss/typography.scss';
+@use '../public/scss/header.scss';
+@use '../public/scss/highlight.scss';
+@use '../public/scss/services-list.scss';
+@use '../public/scss/about-us.scss';
+@use '../public/scss/contact.scss';
+@use '../public/scss/form.scss';
+@use '../public/scss/buttons.scss';

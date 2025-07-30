@@ -1,0 +1,74 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+a:not(.wp-element-button),
+a {
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+.page {
+  min-height: 100dvh;
+  padding-top: 80px;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+.anchor {
+  position: relative;
+  top: calc(-80px - var(--space-8x));
+  visibility: hidden;
+  @media screen and (max-width: 767px) {
+    top: calc(-80px - var(--space-4x));
+  }
+}
+
+.container {
+  max-width: 1440px;
+  padding: 0 var(--space-8x);
+  margin: 0 auto;
+  box-sizing: border-box;
+  @media screen and (max-width: 1200px) {
+    padding: 0 var(--space-4x);
+  }
+  @media screen and (max-width: 767px) {
+    padding: 0 var(--space-2x);
+  }
+}
+
+.link {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footer {
+  padding: var(--space-3x) 0;
+  text-align: center;
+  background-color: var(--color-background);
+  p {
+    margin: 0;
+  }
+}
