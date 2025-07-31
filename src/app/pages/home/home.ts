@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID, signal, WritableSignal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Title, Meta, SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { provideNgxMask, NgxMaskPipe } from 'ngx-mask';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -35,18 +35,19 @@ export class Home implements OnInit {
   days: string[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   openingHours: WritableSignal<any> = signal({});
   places: WritableSignal<any> = signal([]);
+  addressToMap: string = '';
 
   constructor(
     private readonly title: Title,
     private readonly meta: Meta,
     private readonly route: ActivatedRoute,
     private readonly sanitizer: DomSanitizer,
-    private readonly servicesService: Services
+    private readonly servicesService: Services,
+    @Inject(PLATFORM_ID) private readonly platformId: Object,
   ) {
   }
 
   ngOnInit(): void {
-
     this.route.data.subscribe((result) => {
       console.log('Resolver result:', result);
       this.company.set(result['company']?.data[0] ?? {});
@@ -55,10 +56,11 @@ export class Home implements OnInit {
         this.error = true;
       } else {
         this.setInitial();
+        if (isPlatformBrowser(this.platformId)) {
+          if (this.places().length > 0) this.setAddress();
+        }
       }
-
     });
-
   }
 
   setInitial() {
@@ -79,19 +81,19 @@ export class Home implements OnInit {
     this.places.set(this.company().places || []);
 
     if (this.places().length > 0) {
-      this.setAddress(
+      this.addressToMap =
         this.places()[0].street + ', ' +
         this.places()[0].number + ', ' +
         this.places()[0].neighborhood + ', ' +
         this.places()[0].city + ', ' +
-        this.places()[0].state);
+        this.places()[0].state;
     }
   }
 
-  setAddress(address: string) {
-    // const encodedAddress = encodeURIComponent(address);
-    // const url = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
-    // this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  setAddress() {
+    const encodedAddress = encodeURIComponent(this.addressToMap);
+    const url = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
+    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
 

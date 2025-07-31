@@ -9,8 +9,14 @@
   h2 {
     margin-bottom: var(--space-4x);
   }
-  h4 {
+  h3 {
+    font-size: 24px;
+    line-height: 32px;
     margin: var(--space-4x) 0;
+    @media (min-width: 980px) {
+      font-size: 18px;
+      line-height: 26px;
+    }
   }
   .about-us-content {
     @media (min-width: 980px) {
