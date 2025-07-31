@@ -1,0 +1,31 @@
+<header class="header" [class]="showMenu ? 'menu-active' : ''">
+  <div class="container">
+    <h1>
+      <a href="/#home">
+        @if (company.logo) {
+          <img [src]="company.logo" [alt]="company.name" />
+        } @else {
+          {{ company.name }}
+        }
+      </a>
+    </h1>
+    <menu>
+      <ul (click)="closeMenu()">
+        <li><a href="/#home">Início</a></li>
+        @if (services.length > 0) {
+          <li><a href="/#services">Serviços</a></li>
+        }
+        <li><a href="/#about">Sobre nós</a></li>
+        @if (company.site_setup?.showContact) {
+          <li><a href="/#contact">Contato</a></li>
+        }
+      </ul>
+    </menu>
+    <button type="button" (click)="toggleMenu()" class="btn-mobile" aria-label="Abrir menu principal">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="menu-overlay" (click)="toggleMenu()"></div>
+</header>

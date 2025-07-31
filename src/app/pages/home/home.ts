@@ -5,6 +5,9 @@ import { provideNgxMask, NgxMaskPipe } from 'ngx-mask';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Error } from '../error/error';
 
+import { Header } from '../../components/header/header';
+import { Footer } from '../../components/footer/footer';
+
 import { Services } from '../../services/services';
 
 @Component({
@@ -14,6 +17,8 @@ import { Services } from '../../services/services';
     RouterLink,
     CommonModule,
     NgxMaskPipe,
+    Header,
+    Footer,
   ],
   providers: [provideNgxMask()],
   templateUrl: './home.html',
@@ -30,8 +35,6 @@ export class Home implements OnInit {
   days: string[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   openingHours: WritableSignal<any> = signal({});
   places: WritableSignal<any> = signal([]);
-  currentYear: number = new Date().getFullYear();
-  showMenu: boolean = false;
 
   constructor(
     private readonly title: Title,
@@ -86,18 +89,12 @@ export class Home implements OnInit {
   }
 
   setAddress(address: string) {
-    const encodedAddress = encodeURIComponent(address);
-    const url = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
-    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    // const encodedAddress = encodeURIComponent(address);
+    // const url = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
+    // this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  toggleMenu() {
-    this.showMenu = !this.showMenu;
-  }
 
-  closeMenu() {
-    this.showMenu = false;
-  }
 
 
 }
