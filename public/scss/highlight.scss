@@ -35,5 +35,8 @@
     width: 100%;
     height: calc(100dvh - 80px);
     object-fit: cover;
+    @media (orientation: portrait) {
+      height: 100vw;
+    }
   }
 }
