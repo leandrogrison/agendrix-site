@@ -6,14 +6,11 @@
   margin-bottom: var(--space-2x);
   padding-top: var(--space-2x);
   position: relative;
-  &.form-group-error {
+  &.has-error {
     textarea,
     select,
     input {
       border-color: var(--color-error);
-    }
-    .form-error {
-      display: block;
     }
   }
   label {
@@ -44,10 +41,22 @@
     }
   }
   .form-error {
-    display: none;
     margin-top: var(--space-half);
     padding: 0 var(--space-2x);
     color: var(--color-error);
     font-size: 14px;
+  }
+}
+.result-message {
+  font-size: 20px;
+  padding: var(--space-2x);
+  margin-bottom: var(--space-2x);
+  font-weight: 500;
+  border-radius: var(--space-default);
+  color: var(--color-success);
+  background-color: var(--color-success-light);
+  &.message-error {
+    color: var(--color-error);
+    background-color: var(--color-error-light);
   }
 }

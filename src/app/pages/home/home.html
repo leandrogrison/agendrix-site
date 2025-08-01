@@ -137,39 +137,11 @@
       </div>
     </section>
 
-    @if (company().site_setup?.showContact) {
-      <section class="contact">
-        <a id="contact" class="anchor" aria-label="Contato"></a>
-        <div class="container">
-          <h2>Contato</h2>
-          <p>Fale com a gente e agende um de nossos serviços agora mesmo.</p>
-          <div class="contact-content">
-            <form class="form">
-              <div class="form-group">
-                <input type="text" id="name" name="name" required />
-                <label for="name">Seu nome</label>
-                <small class="form-error">Informe seu nome completo</small>
-              </div>
-              <div class="form-group">
-                <input type="tel" id="phone" name="phone" required />
-                <label for="phone">Seu telefone</label>
-                <small class="form-error">Informe seu telefone completo</small>
-              </div>
-              <div class="form-group">
-                <textarea id="message" name="message" rows="4" required></textarea>
-                <label for="message">Mensagem</label>
-                <small class="form-error">Digite uma mensagem</small>
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-large">Enviar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-    }
+    <app-contact [company]="company()"></app-contact>
 
     <app-footer></app-footer>
+
+    <app-whatsapp [company]="company()"></app-whatsapp>
 
   </div>
 

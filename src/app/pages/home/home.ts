@@ -7,6 +7,8 @@ import { Error } from '../error/error';
 
 import { Header } from '../../components/header/header';
 import { Footer } from '../../components/footer/footer';
+import { Contact } from '../../components/contact/contact';
+import { Whatsapp } from '../../components/whatsapp/whatsapp';
 
 import { Services } from '../../services/services';
 
@@ -19,6 +21,8 @@ import { Services } from '../../services/services';
     NgxMaskPipe,
     Header,
     Footer,
+    Contact,
+    Whatsapp
   ],
   providers: [provideNgxMask()],
   templateUrl: './home.html',
@@ -36,6 +40,8 @@ export class Home implements OnInit {
   openingHours: WritableSignal<any> = signal({});
   places: WritableSignal<any> = signal([]);
   addressToMap: string = '';
+
+
 
   constructor(
     private readonly title: Title,
