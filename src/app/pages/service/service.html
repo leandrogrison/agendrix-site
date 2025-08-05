@@ -32,6 +32,7 @@
             ></app-datepicker>
           </div>
           <div class="service-periods">
+            <a id="anchorPeriod" class="anchor" aria-label="Selecione um horário"></a>
             <h4>Selecione um horário</h4>
             <div class="period-selected">
               {{ daySelected | date: 'fullDate' }}
@@ -41,7 +42,7 @@
             } @else {
               <div class="periods">
                 @for (period of periods; track $index) {
-                  <button type="button" class="btn btn-small">
+                  <button (click)="onPeriodSelected(period)" [class]="period === periodSelected ? 'btn-primary' : ''" type="button" class="btn btn-small">
                     {{ period }}
                   </button>
                 }
@@ -57,6 +58,7 @@
             }
           </div>
           <div class="service-customer">
+            <a id="anchorData" class="anchor" aria-label="Informe seus dados"></a>
             <h4>Informe seus dados</h4>
             <form #formData="ngForm" (ngSubmit)="verifyData()" class="form">
               <div class="form-group" [class]="submited && nameField.invalid ? 'has-error' : ''">

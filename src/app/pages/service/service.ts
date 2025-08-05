@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID, signal, WritableSignal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID, signal, WritableSignal, ViewChild, DOCUMENT } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormsModule, NgForm } from '@angular/forms';
 import { provideNgxMask, NgxMaskDirective } from 'ngx-mask';
@@ -46,12 +46,13 @@ export class Service implements OnInit {
   appointments: any[] = [];
   isLoadingPeriod: boolean = true;
   isLoadingSend: boolean = false;
+  periodSelected: string = '';
   name: string = '';
   phone: string = '';
   email: string = '';
   obsCustomer: string = '';
   submited: boolean = false;
-
+  appointmentsLoaded: boolean = false;
 
   @ViewChild('formData') formData!: NgForm;
 
@@ -62,6 +63,8 @@ export class Service implements OnInit {
     private readonly appointmentsService: Appointments,
     private readonly cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private readonly platformId: Object,
+    @Inject(DOCUMENT) private readonly document: Document,
+    private readonly viewportScroller: ViewportScroller,
   ) {}
 
   ngOnInit(): void {
@@ -101,6 +104,7 @@ export class Service implements OnInit {
       } else {
         this.appointments = response.data;
         this.setPeriodIntervals();
+        this.appointmentsLoaded = true;
       }
       this.isLoadingPeriod = false;
       this.cdr.detectChanges();
@@ -110,7 +114,18 @@ export class Service implements OnInit {
 
   onDateSelected(date: any) {
     this.daySelected = date;
+    this.periodSelected = '';
+    const widthWindow = this.document.defaultView?.innerWidth || 0;
+
+    if (this.appointmentsLoaded && widthWindow < 767) this.viewportScroller.scrollToAnchor('anchorPeriod');
     this.setPeriodIntervals();
+  }
+
+  onPeriodSelected(period: any) {
+    this.periodSelected = period;
+    const widthWindow = this.document.defaultView?.innerWidth || 0;
+
+    if (this.appointmentsLoaded && widthWindow < 767) this.viewportScroller.scrollToAnchor('anchorData');
   }
 
   setPeriodIntervals() {
