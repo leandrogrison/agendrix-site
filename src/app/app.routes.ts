@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { App } from './app';
 import { CompanyResolver } from './resolvers/company';
 import { ServicesResolver } from './resolvers/services';
+import { ServiceResolver } from './resolvers/service';
 import { Home } from './pages/home/home';
 import { Error } from './pages/error/error';
 
@@ -15,6 +16,11 @@ export const routes: Routes = [
         path: '',
         component: Home,
         resolve: { services: ServicesResolver },
+      },
+      {
+        path: 'service/:id',
+        loadComponent: () => import('./pages/service/service').then(m => m.Service),
+        resolve: { company: CompanyResolver, service: ServiceResolver },
       }
     ]
   },

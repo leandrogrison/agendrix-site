@@ -1,0 +1,155 @@
+@if (error) {
+  <app-error></app-error>
+} @else {
+  <div [class]="'theme-' + theme() + (colorType() ? '-inverted' : '')" class="page service">
+
+    <app-header [company]="company()" [services]="[service()]"></app-header>
+
+    <div class="service-header">
+      <div class="container">
+        <h1>{{ service().name }}</h1>
+        <p>{{ service().description }}</p>
+        @if (service().duration) {
+          <p>Duração do serviço: {{ service().duration | timeInline }}</p>
+        }
+        @if (service().price && service().show_price_in_site && company().site_setup?.showPriceServices) {
+          <strong>{{  service().price | currency: 'BRL' }}</strong>
+        }
+      </div>
+    </div>
+
+    @if (company().appointment_rules.numbersOfAppointments > 0) {
+      <div class="container service-container">
+        <h3>Faça seu agendamento agora mesmo</h3>
+        <div class="service-content">
+          <div class="service-datepicker">
+            <h4>Selecione uma data</h4>
+            <app-datepicker
+              (dateSelected)="onDateSelected($event)"
+              [disabledDates]="unavailableDates"
+              [appointmentRules]="company().appointment_rules"
+              [openingHours]="company().opening_hours"
+            ></app-datepicker>
+          </div>
+          <div class="service-periods">
+            <h4>Selecione um horário</h4>
+            <div class="period-selected">
+              {{ daySelected | date: 'fullDate' }}
+            </div>
+            @if (isLoadingPeriod) {
+              <div class="loading"></div>
+            } @else {
+              <div class="periods">
+                @for (period of periods; track $index) {
+                  <button type="button" class="btn btn-small">
+                    {{ period }}
+                  </button>
+                }
+              </div>
+              @if (periods.length === 0) {
+                <div class="no-periods">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="period-alert">
+                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5zm3.23 9.41l1.06 1.06 2.44-2.44 2.44 2.44 1.06-1.06-2.44-2.44 2.44-2.44-1.06-1.06-2.44 2.44-2.44-2.44-1.06 1.06 2.44 2.44z"/>
+                  </svg>
+                  Nenhum horário disponível
+                </div>
+              }
+            }
+          </div>
+          <div class="service-customer">
+            <h4>Informe seus dados</h4>
+            <form #formData="ngForm" (ngSubmit)="verifyData()" class="form">
+              <div class="form-group" [class]="submited && nameField.invalid ? 'has-error' : ''">
+                <input
+                  [(ngModel)]="name"
+                  (keyup)="verifyFilled($event)"
+                  #nameField="ngModel"
+                  [disabled]="isLoadingSend"
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  minlength="5"
+                  maxlength="100"
+                />
+                <label for="name">Seu nome</label>
+                @if (submited && nameField.invalid) {
+                  <small class="form-error">Informe seu nome completo</small>
+                }
+              </div>
+              <div class="form-group" [class]="submited && phoneField.invalid ? 'has-error' : ''">
+                <input
+                  [(ngModel)]="phone"
+                  (keyup)="verifyFilled($event)"
+                  #phoneField="ngModel"
+                  [disabled]="isLoadingSend"
+                  mask="(00) 0000-0000||(00) 00000-0000"
+                  [dropSpecialCharacters]="false"
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  maxlength="100"
+                  required
+                />
+                <label for="phone">Seu telefone</label>
+                @if (submited && phoneField.invalid) {
+                  <small class="form-error">Informe seu telefone completo</small>
+                }
+              </div>
+              <div class="form-group" [class]="submited && emailField.invalid ? 'has-error' : ''">
+                <input
+                  [(ngModel)]="email"
+                  (keyup)="verifyFilled($event)"
+                  #emailField="ngModel"
+                  [disabled]="isLoadingSend"
+                  type="email"
+                  id="email"
+                  name="email"
+                  maxlength="200"
+                />
+                <label for="email">Seu e-mail (opcional)</label>
+                @if (submited && emailField.invalid) {
+                  <small class="form-error">Informe um e-mail válido</small>
+                }
+              </div>
+              <div class="form-group" [class]="submited && obsCustomerField.invalid ? 'has-error' : ''">
+                <textarea
+                  [(ngModel)]="obsCustomer"
+                  (keyup)="verifyFilled($event)"
+                  #obsCustomerField="ngModel"
+                  [disabled]="isLoadingSend"
+                  id="obsCustomer"
+                  name="obsCustomer"
+                  rows="1"
+                  minlength="10"
+                  maxlength="1000"
+                ></textarea>
+                <label for="obsCustomer">Observações (opcional)</label>
+                @if (submited && obsCustomerField.invalid) {
+                  <small class="form-error">Digite uma observação válida</small>
+                }
+              </div>
+              <div class="form-group">
+                @if (isLoadingSend) {
+                  <button type="button" disabled class="btn btn-primary btn-large" [class]="isLoadingSend ? 'btn-loading' : ''">
+                    <div class="loading"></div>Enviando...
+                  </button>
+                } @else {
+                  <button type="submit" class="btn btn-primary btn-large">
+                    Confirmar agendamento
+                  </button>
+                }
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    }
+
+    <app-footer></app-footer>
+
+    <app-whatsapp [company]="company()"></app-whatsapp>
+
+  </div>
+}
+

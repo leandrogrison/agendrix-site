@@ -4,7 +4,7 @@ import { Services } from '../services/services';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class ServicesResolver implements Resolve<any> {
+export class ServiceResolver implements Resolve<any> {
 
   constructor(
     private readonly services: Services,
@@ -14,8 +14,6 @@ export class ServicesResolver implements Resolve<any> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any>|Promise<any> {
-    const companyData = route.parent?.data['company'];
-    const company = companyData?.data;
-    return this.services.getServices(company.id);
+    return this.services.getService(route.params['id']);
   }
 }

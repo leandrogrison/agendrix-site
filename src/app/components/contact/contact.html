@@ -24,7 +24,7 @@
               <small class="form-error">Informe seu nome completo</small>
             }
           </div>
-          <div class="form-group" [class]="submited && nameField.invalid ? 'has-error' : ''">
+          <div class="form-group" [class]="submited && phoneField.invalid ? 'has-error' : ''">
             <input
               [(ngModel)]="phone"
               (keyup)="verifyFilled($event)"
@@ -43,7 +43,7 @@
               <small class="form-error">Informe seu telefone completo</small>
             }
           </div>
-          <div class="form-group" [class]="submited && nameField.invalid ? 'has-error' : ''">
+          <div class="form-group" [class]="submited && messageField.invalid ? 'has-error' : ''">
             <textarea
               [(ngModel)]="message"
               (keyup)="verifyFilled($event)"

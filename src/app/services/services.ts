@@ -25,4 +25,15 @@ export class Services {
       .range(from, to)
       .is('deleted', false);
   }
+
+  getService(id: string): Promise<any> {
+    return this.supabase.sb
+      .from('services')
+      .select('*')
+      .eq('id', id)
+      .single()
+      .eq('appointment_online', true)
+      .is('deleted', false);
+  }
+
 }

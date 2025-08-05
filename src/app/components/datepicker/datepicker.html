@@ -1,0 +1,34 @@
+<div class="datepicker-container">
+  <div class="datepicker-header">
+    <button (click)="previousMonth()" class="btn" aria-label="Mês anterior" [disabled]="isPreviousMonthDisabled()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"/>
+      </svg>
+    </button>
+    <span class="month-year">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+    <button (click)="nextMonth()" class="btn" aria-label="Próximo mês">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="datepicker-grid days-of-week">
+    @for(day of daysOfWeek; track $index) {
+      <div>{{ day }}</div>
+    }
+  </div>
+  <div class="datepicker-grid days">
+    @for(day of daysInMonth; track $index) {
+      <div
+        class="day"
+        [class.disabled]="isDateDisabled(day)"
+        [class.selected]="isDateSelected(day)"
+        (click)="selectDate(day)"
+        [attr.aria-label]="day ? day.toLocaleDateString() : null">
+        @if(day) {
+          <span>{{ day.getDate() }}</span>
+        }
+      </div>
+    }
+  </div>
+</div>

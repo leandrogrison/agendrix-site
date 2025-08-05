@@ -13,6 +13,7 @@ export class Company {
     return this.supabase.sb
       .from('companies')
       .select('*')
+      .single()
       .eq('id', id);
   }
 
@@ -20,6 +21,7 @@ export class Company {
     return this.supabase.sb
       .from('companies')
       .select('*')
+      .single()
       .eq('domain', domain);
   }
 
@@ -27,6 +29,7 @@ export class Company {
     return this.supabase.sb
       .from('companies')
       .select('*')
+      .single()
       .eq('subdomain', subdomain);
   }
 }
