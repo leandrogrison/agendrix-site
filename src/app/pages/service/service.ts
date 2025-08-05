@@ -92,11 +92,13 @@ export class Service implements OnInit {
     this.setUnavailableDates();
     if (isPlatformBrowser(this.platformId)) {
       this.getAppointments();
+      this.viewportScroller.scrollToPosition([0, 0]);
     }
   }
 
 
   getAppointments() {
+    console.log('foi')
     this.isLoadingPeriod = true;
     this.appointmentsService.getAppointments(this.company().id, this.daySelected.toISOString().split('T')[0]).then((response: any) => {
       if (response.error) {
