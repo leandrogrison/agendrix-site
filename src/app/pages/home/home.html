@@ -96,7 +96,7 @@
             </div>
           }
 
-          @if (company().site_setup?.showMap && mapUrl) {
+          @if (company().site_setup?.showMap && mapUrl && showMapInFront()) {
             <iframe
               [src]="mapUrl"
               title="Mapa de localização"
