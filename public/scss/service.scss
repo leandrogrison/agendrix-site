@@ -93,3 +93,11 @@
   height: 32px;
   fill: var(--color-warning);
 }
+
+.period-error {
+  color: var(--color-error);
+  margin-top: var(--space-2x);
+  padding: var(--space-2x);
+  border-radius: var(--space-default);
+  border: 2px solid var(--color-error);
+}

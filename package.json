@@ -32,6 +32,7 @@
     "@supabase/supabase-js": "^2.52.0",
     "express": "^5.1.0",
     "ngx-mask": "^20.0.0",
+    "ngx-turnstile": "^0.2.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

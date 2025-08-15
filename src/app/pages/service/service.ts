@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID, signal, WritableSignal, ViewChild, DOCUMENT } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser, ViewportScroller } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { FormsModule, NgForm } from '@angular/forms';
 import { provideNgxMask, NgxMaskDirective } from 'ngx-mask';
+import { NgxTurnstileModule } from "ngx-turnstile";
 
 import { TimeInlinePipe } from '../../pipes/time-inline-pipe';
 
@@ -14,6 +15,9 @@ import { Footer } from '../../components/footer/footer';
 import { Datepicker } from '../../components/datepicker/datepicker';
 
 import { Appointments } from '../../services/appointments';
+import { Customer } from '../../services/customer';
+import { Captcha } from '../../services/captcha';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-service',
@@ -26,7 +30,8 @@ import { Appointments } from '../../services/appointments';
     TimeInlinePipe,
     Datepicker,
     FormsModule,
-    NgxMaskDirective
+    NgxMaskDirective,
+    NgxTurnstileModule
   ],
   providers: [provideNgxMask()],
   templateUrl: './service.html',
@@ -45,14 +50,21 @@ export class Service implements OnInit {
   dasyOfWeekExtended = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
   appointments: any[] = [];
   isLoadingPeriod: boolean = true;
-  isLoadingSend: boolean = false;
   periodSelected: string = '';
   name: string = '';
   phone: string = '';
   email: string = '';
+  password: string = '';
   obsCustomer: string = '';
   submited: boolean = false;
   appointmentsLoaded: boolean = false;
+  showSendCode: boolean = false;
+  errorCustomer: string = '';
+  showCaptcha: WritableSignal<boolean> = signal(false);
+  isLoadingSend: WritableSignal<boolean> = signal(false);
+  siteKey = '0x4AAAAAABqnTcQ3G3y8TWcm';
+  captchaToken: string | null = null;
+
 
   @ViewChild('formData') formData!: NgForm;
 
@@ -61,15 +73,18 @@ export class Service implements OnInit {
     private readonly title: Title,
     private readonly meta: Meta,
     private readonly appointmentsService: Appointments,
+    private readonly customerService: Customer,
     private readonly cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private readonly platformId: Object,
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly viewportScroller: ViewportScroller,
+    private readonly captcha: Captcha,
+    private readonly auth: Auth,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
     this.route.data.subscribe((result) => {
-      console.log('Resolver result:', result);
       this.service.set(result['service']?.data ?? {});
       this.company.set(result['company']?.data ?? {});
       if (Object.keys(this.service()).length === 0) {
@@ -80,9 +95,10 @@ export class Service implements OnInit {
     });
   }
 
+
   setInitial() {
     const title = this.service().name + ' - ' + this.company().name;
-    const description = this.service().description;
+    const description = this.service().description ? this.service().description : 'Serviço de ' + this.service().name + ' na empresa ' + this.company().name;
 
     this.title.setTitle(title);
     this.meta.updateTag({ name: 'description', content: description });
@@ -98,7 +114,6 @@ export class Service implements OnInit {
 
 
   getAppointments() {
-    console.log('foi')
     this.isLoadingPeriod = true;
     this.appointmentsService.getAppointments(this.company().id, this.daySelected.toISOString().split('T')[0]).then((response: any) => {
       if (response.error) {
@@ -168,7 +183,6 @@ export class Service implements OnInit {
       return this.daySelected.toISOString().split('T')[0] === appointment.start.split('T')[0];
     });
 
-
     const daySelected = this.daySelected.toISOString().split('T')[0] + 'T';
     const overlappingCounts: number[] = [];
     let generatedPeriodsFiltred: string[] = generatedPeriods;
@@ -200,7 +214,7 @@ export class Service implements OnInit {
       const dateAppointmentStart = appointment.start.split('+')[0];
       const dateAppointmentEnd = appointment.end.split('+')[0];
 
-      generatedPeriodsFiltred = generatedPeriods.filter((period: string) => {
+      generatedPeriodsFiltred = generatedPeriodsFiltred.filter((period: string) => {
         const datePeriod = daySelected + period + ':00';
         const verifyDates = datePeriod < dateAppointmentStart || datePeriod >= dateAppointmentEnd;
         const verifyLimit = overlappingCounts[index] < this.company().appointment_rules.numbersOfAppointments;
@@ -232,10 +246,143 @@ export class Service implements OnInit {
   }
 
   verifyData() {
-
     this.submited = true;
+    this.showCaptcha.set(false);
+
+    const widthWindow = this.document.defaultView?.innerWidth || 0;
+
+    if (this.periodSelected === '' && widthWindow < 767) this.viewportScroller.scrollToAnchor('anchorPeriod');
+
+    if (this.periodSelected === '') return;
 
     if (this.formData.invalid) return;
+
+    this.isLoadingSend.set(true);
+    this.showCaptcha.set(true);
+    this.cdr.detectChanges();
+  }
+
+  async sendCaptchaResponse(captchaResponse: string | null) {
+    this.captchaToken = captchaResponse;
+    if (!this.captchaToken) {
+      this.isLoadingSend.set(false);
+      return;
+    }
+
+    try {
+      const sessionData = await this.captcha.sendCaptcha(this.captchaToken);
+
+      if (sessionData.session && sessionData.user) {
+        this.auth.setSession(sessionData.session).then((response: any) => {
+          if (response.error) {
+            console.log(response.error);
+            this.errorCustomer = 'Erro ao confirmar agendamento, tente novamente.';
+            this.isLoadingSend.set(false);
+          } else {
+            this.verifyCustomer();
+          }
+        });
+      } else {
+        throw new Error();
+      }
+    } catch (error: any) {
+      console.error(error);
+      this.errorCustomer = 'Erro ao confirmar agendamento, tente novamente.';
+      this.isLoadingSend.set(false);
+    } finally {
+      this.cdr.detectChanges();
+    }
+  }
+
+  verifyCustomer() {
+    this.errorCustomer = '';
+
+    this.customerService.getCustomerByPhone(this.phone, this.company().id).then((response: any) => {
+      if (response.error) {
+        console.log(response.error);
+        this.errorCustomer = 'Erro ao verificar usuário';
+        this.isLoadingSend.set(false);
+      } else {
+        if (response.data.length === 0) {
+          this.addCustomer();
+        } else {
+          this.updateCustomer(response.data[0]);
+        }
+      }
+      this.showCaptcha.set(false);
+      this.cdr.detectChanges();
+    });
+  }
+
+  addCustomer() {
+    this.customerService.addCustomer([{
+      name: this.name,
+      email: this.email,
+      phone: this.phone,
+      company_id: [this.company().id],
+    }]).then((response: any) => {
+      if (response.error) {
+        console.log(response.error);
+        this.errorCustomer = 'Erro ao confirmar agendamento, tente novamente.';
+        this.isLoadingSend.set(false);
+      } else {
+        this.addAppointment(response.data[0]);
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  updateCustomer(customer: any) {
+    this.customerService.updateCustomer([{
+      id: customer.id,
+      name: this.name,
+      email: this.email,
+    }]).then((response: any) => {
+      if (response.error) {
+        console.log(response.error);
+        this.errorCustomer = 'Erro ao confirmar agendamento, tente novamente.';
+        this.isLoadingSend.set(false);
+      } else {
+        this.addAppointment(response.data[0]);
+      }
+      this.cdr.detectChanges();
+    });
+
+  }
+
+  addAppointment(customer: any) {
+    const offsetDate = this.daySelected.getTimezoneOffset();
+    const start = this.daySelected.toISOString().split('T')[0] + 'T' + this.periodSelected + ':00';
+    const [hoursToAdd, minutesToAdd] = this.service().duration.split(':').map(Number);
+    const milisecondsToAdd = (hoursToAdd * 60 + minutesToAdd - offsetDate) * 60 * 1000;
+    const end = new Date(new Date(start).getTime() + milisecondsToAdd);
+    const appointment = {
+      company_id: this.company().id,
+      service_id: this.service().id,
+      service: this.service().name,
+      duration: this.service().duration,
+      customer_id: customer.id,
+      customer: customer.name,
+      customer_phone: customer.phone,
+      customer_email: customer.email,
+      obs_customer: this.obsCustomer,
+      origin: 1,
+      start: start,
+      end: end.toISOString(),
+    }
+
+    this.appointmentsService.addAppointment([appointment]).then((response: any) => {
+      if (response.error) {
+        console.log(response.error);
+        this.errorCustomer = 'Erro ao confirmar agendamento, tente novamente.';
+      } else {
+        this.errorCustomer = '';
+        localStorage.setItem('lastAppointmentCreatedAgendrix', JSON.stringify(appointment));
+        this.router.navigate(['/agendamento-confirmado']);
+      }
+      this.isLoadingSend.set(false);
+      this.cdr.detectChanges();
+    });
   }
 
   verifyFilled(e: any) {

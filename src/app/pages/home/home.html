@@ -32,7 +32,7 @@
           <ul>
             @for (service of services(); track $index) {
               <li>
-                <a [routerLink]="['/service', service.id]">
+                <a [routerLink]="['/servico', service.id]">
                   <span class="services-list-content">
                     <strong>{{ service.name }}</strong>
                     @if (service.description) {

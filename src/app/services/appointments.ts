@@ -23,4 +23,11 @@ export class Appointments {
     return query;
   }
 
+  addAppointment(appointment: any): Promise<any> {
+    return this.supabase.sb
+      .from('appointments')
+      .insert(appointment)
+      .select();
+  }
+
 }

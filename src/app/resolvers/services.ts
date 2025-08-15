@@ -15,7 +15,7 @@ export class ServicesResolver implements Resolve<any> {
     state: RouterStateSnapshot
   ): Observable<any>|Promise<any> {
     const companyData = route.parent?.data['company'];
-    const company = companyData?.data;
-    return this.services.getServices(company.id);
+    const companyId = companyData?.data?.id;
+    return this.services.getServices(companyId);
   }
 }

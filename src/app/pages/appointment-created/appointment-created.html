@@ -1,0 +1,38 @@
+@if (error) {
+  <app-error></app-error>
+} @else {
+  <div [class]="'theme-' + theme() + (colorType() ? '-inverted' : '')" class="page appointment">
+
+    <app-header [company]="company()" [services]="[service()]"></app-header>
+
+    @if (isLoading()) {
+      <div class="loading"></div>
+    } @else {
+
+      <div class="container container-appointment">
+        <div class="appointment-icon-success">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5zm5.56 10.46l5.93-5.93-1.06-1.06-4.87 4.87-2.11-2.11-1.06 1.06z"/>
+          </svg>
+        </div>
+        <h1>Agendamento confirmado!</h1>
+        <p>{{ appointment().customer }}, seu agendamento para {{ appointment().service }} foi realizado com sucesso.</p>
+        <p class="appointment-date">
+         <small>Data e hora do agendamento:</small>
+          <strong>
+            {{  appointment().start | date: 'fullDate' }} às {{ appointment().start | date: 'shortTime' }}
+          </strong>
+        </p>
+        <a [routerLink]="['/']" class="btn btn-primary">
+          Voltar para a página inicial
+        </a>
+      </div>
+
+    }
+
+    <app-footer></app-footer>
+
+    <app-whatsapp [company]="company()"></app-whatsapp>
+
+  </div>
+}

@@ -18,9 +18,14 @@ export const routes: Routes = [
         resolve: { services: ServicesResolver },
       },
       {
-        path: 'service/:id',
+        path: 'servico/:id',
         loadComponent: () => import('./pages/service/service').then(m => m.Service),
         resolve: { company: CompanyResolver, service: ServiceResolver },
+      },
+      {
+        path: 'agendamento-confirmado',
+        loadComponent: () => import('./pages/appointment-created/appointment-created').then(m => m.AppointmentCreated),
+        resolve: { company: CompanyResolver, services: ServicesResolver },
       }
     ]
   },

@@ -55,7 +55,6 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe((result) => {
-      console.log('Resolver result:', result);
       this.company.set(result['company']?.data ?? {});
       this.services.set(result['services']?.data ?? []);
       if (Object.keys(this.company()).length === 0) {
