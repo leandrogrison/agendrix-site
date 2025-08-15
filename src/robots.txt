@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Bloqueia o rastreador do ChatGPT.
+User-agent: GPTBot
+Disallow: /
+
+# Bloqueia o rastreador do Common Crawl (usado por vários modelos de IA).
+User-agent: CCBot
+Disallow: /
+
+# Bloqueia o rastreador da Anthropic (Claude).
+User-agent: anthropic-ai
+Disallow: /
+
+# Bloqueia o rastreador da Cohere.
+User-agent: cohere-ai
+Disallow: /
+
+# Bloqueia o rastreador do Perplexity AI.
+User-agent: PerplexityBot
+Disallow: /
