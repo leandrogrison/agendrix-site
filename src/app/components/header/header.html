@@ -3,7 +3,7 @@
     <h1>
       <a href="/#home">
         @if (company.logo) {
-          <img [src]="company.logo" [alt]="company.name" />
+          <img [src]="company.logo" [alt]="company.name" fetchpriority="high" />
         } @else {
           {{ company.name }}
         }

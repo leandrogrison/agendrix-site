@@ -17,7 +17,7 @@
           </div>
         }
         @if (company().site_setup.imageHighlight) {
-          <img [src]="company().site_setup.imageHighlight" [alt]="company().site_setup.textHighlight" />
+          <img [src]="company().site_setup.imageHighlight" [alt]="company().site_setup.textHighlight" fetchpriority="high" />
         }
       </section>
     }
