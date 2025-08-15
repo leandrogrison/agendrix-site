@@ -98,9 +98,9 @@ export class Home implements OnInit {
     const encodedAddress = encodeURIComponent(this.addressToMap);
     const url = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
     this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    setTimeout(() => {
-      this.showMapInFront.set(true);
-    }, 2000);
+    // setTimeout(() => {
+    //   this.showMapInFront.set(true);
+    // }, 2000);
   }
 
 
