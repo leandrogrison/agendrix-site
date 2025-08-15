@@ -3,7 +3,6 @@ import { App } from './app';
 import { CompanyResolver } from './resolvers/company';
 import { ServicesResolver } from './resolvers/services';
 import { ServiceResolver } from './resolvers/service';
-import { Home } from './pages/home/home';
 import { Error } from './pages/error/error';
 
 export const routes: Routes = [
@@ -14,7 +13,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: Home,
+        loadComponent: () => import('./pages/home/home').then(m => m.Home),
         resolve: { services: ServicesResolver },
       },
       {

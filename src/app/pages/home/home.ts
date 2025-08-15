@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, PLATFORM_ID, signal, WritableSignal } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, HostListener, Inject, OnInit, PLATFORM_ID, signal, WritableSignal } from '@angular/core';
+import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { Title, Meta, SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { provideNgxMask, NgxMaskPipe } from 'ngx-mask';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -15,6 +15,7 @@ import { Services } from '../../services/services';
 @Component({
   selector: 'app-home',
   imports: [
+    NgOptimizedImage,
     Error,
     RouterLink,
     CommonModule,
@@ -62,6 +63,7 @@ export class Home implements OnInit {
         this.setInitial();
         if (isPlatformBrowser(this.platformId)) {
           if (this.places().length > 0) this.setAddress();
+          if (window.scrollY > 0 && !this.showMapInFront()) this.showMapInFront.set(true);
         }
       }
     });
@@ -98,12 +100,14 @@ export class Home implements OnInit {
     const encodedAddress = encodeURIComponent(this.addressToMap);
     const url = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
     this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    // setTimeout(() => {
-    //   this.showMapInFront.set(true);
-    // }, 2000);
   }
 
-
-
-
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      if (window.scrollY > 0 && !this.showMapInFront()) {
+        this.showMapInFront.set(true);
+      }
+    }
+  }
 }

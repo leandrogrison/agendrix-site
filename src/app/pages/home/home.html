@@ -17,7 +17,14 @@
           </div>
         }
         @if (company().site_setup.imageHighlight) {
-          <img [src]="company().site_setup.imageHighlight" [alt]="company().site_setup.textHighlight" fetchpriority="high" />
+          <img
+            [ngSrc]="company().site_setup.imageHighlight"
+            [alt]="company().site_setup.textHighlight"
+            width="1920"
+            height="1080"
+            priority
+            sizes="100vw"
+          />
         }
       </section>
     }
