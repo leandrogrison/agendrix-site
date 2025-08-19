@@ -10,7 +10,7 @@
     @if (company().site_setup?.showImageHighlight && (company().site_setup?.imageHighlight || company().site_setup?.textHighlight)) {
       <section class="highlight">
         @if (company().site_setup.textHighlight) {
-          <div class="highlight-text">
+          <div class="highlight-text" [class]="{ 'without-image': !company().site_setup.imageHighlight }">
             <div class="container">
               <strong>{{ company().site_setup.textHighlight }}</strong>
             </div>
