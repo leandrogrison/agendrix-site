@@ -1,1 +1,13 @@
-<p>error works!</p>
+<div class="container">
+  <img src="images/error.svg" alt="Erro ao carregar página" class="error-image">
+  @if (errorType === 'company') {
+    <h1>Ops... Empresa não encontrada!</h1>
+    <p class="error-message">A empresa que você está acessando não se encontra mais em nosso sistema ou não existe.</p>
+  } @else {
+    <h1>Ops... Página não encontrada!</h1>
+    <p class="error-message">A página que você está procurando não foi encontrada em nosso sistema.</p>
+  }
+  <p>Este site foi desenvolvido por <strong>Agendrix</strong>, sistema de agendamento para os mais diversos segmentos de mercado.</p>
+  <a href="https://www.agendrix.com.br" rel="noopener noreferrer" class="btn btn-small">Conheça a Agendrix</a>
+</div>
+

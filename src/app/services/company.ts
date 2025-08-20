@@ -14,6 +14,7 @@ export class Company {
       .from('companies')
       .select('*')
       .single()
+      .is('inactive', false)
       .eq('id', id);
   }
 
@@ -22,6 +23,7 @@ export class Company {
       .from('companies')
       .select('*')
       .single()
+      .is('inactive', false)
       .eq('domain', domain);
   }
 
@@ -30,6 +32,7 @@ export class Company {
       .from('companies')
       .select('*')
       .single()
+      .is('inactive', false)
       .eq('subdomain', subdomain);
   }
 }
