@@ -42,7 +42,7 @@ export class AppointmentCreated implements OnInit {
     this.route.data.subscribe((result) => {
       this.service.set(result['services']?.data ?? {});
       this.company.set(result['company']?.data ?? {});
-      if (Object.keys(this.service()).length === 0) {
+      if (Object.keys(this.company()).length === 0) {
         this.error = true;
       } else {
         this.setInitial();
