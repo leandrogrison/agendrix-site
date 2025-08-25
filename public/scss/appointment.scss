@@ -44,4 +44,12 @@
   .btn-primary {
     margin: var(--space-4x) 0 var(--space-8x) 0;
   }
+  .appointment-icon-whatsapp {
+    fill: var(--color-text);
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-top: var(--space-half);
+  }
 }

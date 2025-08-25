@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, PLATFORM_ID, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule, ViewportScroller, isPlatformBrowser } from '@angular/common';
-import { Title } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl, Title } from '@angular/platform-browser';
 
 import { Header } from '../../components/header/header';
 import { Error } from '../error/error';
@@ -16,7 +16,7 @@ import { Footer } from '../../components/footer/footer';
     Header,
     Error,
     Whatsapp,
-    Footer,
+    Footer
   ],
   templateUrl: './appointment-created.html',
   styleUrl: './appointment-created.scss'
@@ -30,12 +30,14 @@ export class AppointmentCreated implements OnInit {
   error: boolean = false;
   appointment: WritableSignal<any> = signal({});
   isLoading: WritableSignal<boolean> = signal(true);
+  whatsappUrl!: SafeUrl;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly title: Title,
     @Inject(PLATFORM_ID) private readonly platformId: Object,
     private readonly viewportScroller: ViewportScroller,
+    private readonly sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -59,8 +61,11 @@ export class AppointmentCreated implements OnInit {
 
     if (isPlatformBrowser(this.platformId)) {
       this.appointment.set(JSON.parse(localStorage.getItem('lastAppointmentCreatedAgendrix') ?? '{}'));
-      this.isLoading.set(false);
       this.viewportScroller.scrollToPosition([0, 0]);
+      const phone = this.company().phone.replace(/\D/g, '');
+      const url = `https://wa.me/55${phone}`;
+      this.whatsappUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+      this.isLoading.set(false);
     }
   }
 
